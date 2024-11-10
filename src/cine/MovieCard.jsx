@@ -14,6 +14,7 @@ export default function MovieCard({ movie }) {
     if (!find) {
       setCartData([...cartData, movie]);
       console.log(cartData);
+      setShowModal(false);
     } else {
       console.log("movie already added to card");
     }
@@ -30,6 +31,7 @@ export default function MovieCard({ movie }) {
     <>
       {showModal && (
         <MovieDetailsModal
+          handleAddCArt={handleAddCart}
           movie={selectedMovie}
           onClose={handleCloseModal}
         ></MovieDetailsModal>

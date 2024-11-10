@@ -1,5 +1,16 @@
 /* eslint-disable react/prop-types */
+import { useContext } from "react";
+import delate from "../assets/delete.svg";
+import checkout from "../assets/icons/checkout.svg";
+import { MovieContext } from "../context";
+import { getImgUrl } from "../utils/cine-utility";
+
 export default function CartDetails({ onClose }) {
+  const { cartData, setCartData } = useContext(MovieContext);
+  function handleDelateCart(itemID) {
+    const filterData = cartData.filter((item) => item.id !== itemID);
+    setCartData([...filterData]);
+  }
   return (
     <>
       <div className="fixed top-0 left-0 w-screen h-screen z-50 bg-black/60 backdrop-blur-sm">
@@ -9,62 +20,49 @@ export default function CartDetails({ onClose }) {
               Your Carts
             </h2>
             <div className="space-y-8 lg:space-y-12 max-h-[450px] overflow-auto mb-10 lg:mb-14">
-              <div className="grid grid-cols-[1fr_auto] gap-4">
-                <div className="flex items-center gap-4">
-                  <img
-                    className="rounded overflow-hidden"
-                    src="/assets/cart-item.png"
-                    alt=""
-                  />
-                  <div>
-                    <h3 className="text-base md:text-xl font-bold">Iron Man</h3>
-                    <p className="max-md:text-xs text-[#575A6E]">
-                      Action/Adventure/Sci-fi
-                    </p>
-                    <span className="max-md:text-xs">$100</span>
+              {cartData.length === 0 ? (
+                <p> your Cart is empty</p>
+              ) : (
+                cartData.map((data) => (
+                  <div
+                    key={data.id}
+                    className="grid grid-cols-[1fr_auto] gap-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <img
+                        className="rounded overflow-hidden w-[60px]"
+                        src={getImgUrl(data.cover)}
+                        alt=""
+                      />
+                      <div>
+                        <h3 className="text-base md:text-xl font-bold">
+                          {data.title}
+                        </h3>
+                        <p className="max-md:text-xs text-[#575A6E]">
+                          {data.genre}
+                        </p>
+                        <span className="max-md:text-xs">${data.price}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between gap-4 items-center">
+                      <button
+                        onClick={() => handleDelateCart(data.id)}
+                        className="bg-[#D42967] rounded-md p-2 md:px-4 inline-flex items-center space-x-2 text-white"
+                      >
+                        <img className="w-5 h-5" src={delate} alt="" />
+                        <span className="max-md:hidden">Remove</span>
+                      </button>
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-between gap-4 items-center">
-                  <button className="bg-[#D42967] rounded-md p-2 md:px-4 inline-flex items-center space-x-2 text-white">
-                    <img className="w-5 h-5" src="./assets/delete.svg" alt="" />
-                    <span className="max-md:hidden">Remove</span>
-                  </button>
-                </div>
-              </div>
-              <div className="grid grid-cols-[1fr_auto] gap-4">
-                <div className="flex items-center gap-4">
-                  <img
-                    className="rounded overflow-hidden"
-                    src="/assets/cart-item.png"
-                    alt=""
-                  />
-                  <div>
-                    <h3 className="text-base md:text-xl font-bold">Iron Man</h3>
-                    <p className="max-md:text-xs text-[#575A6E]">
-                      Action/Adventure/Sci-fi
-                    </p>
-                    <span className="max-md:text-xs">$100</span>
-                  </div>
-                </div>
-                <div className="flex justify-between gap-4 items-center">
-                  <button className="bg-[#D42967] rounded-md p-2 md:px-4 inline-flex items-center space-x-2 text-white">
-                    <img className="w-5 h-5" src="./assets/delete.svg" alt="" />
-                    <span className="max-md:hidden">Remove</span>
-                  </button>
-                </div>
-              </div>
+                ))
+              )}
             </div>
             <div className="flex items-center justify-end gap-2">
               <a
                 className="rounded-md p-2 md:px-4 inline-flex items-center space-x-2 bg-primary text-[#171923] text-sm"
                 href="#"
               >
-                <img
-                  src="./assets/icons/checkout.svg"
-                  width="24"
-                  height="24"
-                  alt=""
-                />
+                <img src={checkout} width="24" height="24" alt="" />
                 <span>Checkout</span>
               </a>
               <a
