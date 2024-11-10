@@ -1,12 +1,23 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { MovieContext } from "../context";
 import { getImgUrl } from "../utils/cine-utility";
 import MovieDetailsModal from "./MovieDetailsModal";
 import Rating from "./Rating";
 
 export default function MovieCard({ movie }) {
+  const { cartData, setCartData } = useContext(MovieContext);
   const [showModal, setShowModal] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState(null);
+  function handleAddCart(movie) {
+    const find = cartData.find((data) => data.id === movie.id);
+    if (!find) {
+      setCartData([...cartData, movie]);
+      console.log(cartData);
+    } else {
+      console.log("movie already added to card");
+    }
+  }
   function handleCloseModal() {
     setSelectedMovie(null);
     setShowModal(false);
@@ -25,6 +36,7 @@ export default function MovieCard({ movie }) {
       )}
       <figure className="p-4 border border-black/10 shadow-sm dark:border-white/10 rounded-xl">
         <img
+          onClick={() => handleMovieSelection(movie)}
           className="w-full object-cover"
           src={getImgUrl(movie.cover)}
           alt=""
@@ -36,12 +48,12 @@ export default function MovieCard({ movie }) {
             <Rating value={movie.rating}></Rating>
           </div>
           <a
-            onClick={() => handleMovieSelection(movie)}
+            onClick={() => handleAddCart(movie)}
             className="bg-primary rounded-lg py-2 px-5 flex items-center justify-center gap-2 text-[#171923] font-semibold text-sm"
             href="#"
           >
             <img src="./assets/tag.svg" alt="" />
-            <span>$100 | Add to Cart</span>
+            <span>${movie.price} | Add to Cart</span>
           </a>
         </figcaption>
       </figure>
